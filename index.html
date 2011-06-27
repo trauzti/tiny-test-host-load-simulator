@@ -22,8 +22,9 @@
                     ahscNCy0cMBWsSI0TCQcZc5ALkEYckL5A5noWSBhfm2AecMAjbcRWV0pUTh0HE64TNf0mczcnnQy
                     u/MilaFJCae1nw2fbz1DnVOxyGTlKeZft/Ff8x1BRssfACjTwQAAAABJRU5ErkJggg==" alt="" />
                 </a>
+
             </div>
-           
+
         	<div class="grid_3" id="hostlabel">Host</div>
             <div class="grid_1">HB</div>
             <div class="grid_4" id="vmlabel">Virtual Machines</div>
@@ -42,7 +43,23 @@
 
     <script id="host-tmpl" type="text/x-jquery-tmpl">
         <div id="${key}" class="host">
-            <div class="grid_4">${key}<div id="${key}-stats" class="stats">&nbsp;</div></div>
+            <div class="grid_4">
+                <a href="#" rel="${key}" class="delete-host">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29md
+                HdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJdSURBVDjLpZP7S1NhGMf9W7YfogSJboSEUVCY8
+                zJ31trcps6zTI9bLGJpjp1hmkGNxVz4Q6ildtXKXzJNbJRaRmrXoeWx8tJOTWptnrNryre5YCYuI
+                3rh+8vL+/m8PA/PkwIg5X+y5mJWrxfOUBXm91QZM6UluUmthntHqplxUml2lciF6wrmdHriI0Wx3
+                xw2hAediLwZRWRkCPzdDswaSvGqkGCfq8VEUsEyPF1O8Qu3O7A09RbRvjuIttsRbT6HHzebsDjcB
+                4/JgFFlNv9MnkmsEszodIIY7Oaut2OJcSF68Qx8dgv8tmqEL1gQaaARtp5A+N4NzB0lMXxon/uxb
+                I8gIYjB9HytGYuusfiPIQcN71kjgnW6VeFOkgh3XcHLvAwMSDPohOADdYQJdF1FtLMZPmslvhZJk
+                2ahkgRvq4HHUoWHRDqTEDDl2mDkfheiDgt8pw340/EocuClCuFvboQzb0cwIZgki4KhzlaE6w0In
+                ipbVzBfqoK/qRH94i0rgokSFeO11iBkp8EdV8cfJo0yD75aE2ZNRvSJ0lZKcBXLaUYmQrCzDT6tD
+                N5SyRqYlWeDLZAg0H4JQ+Jt6M3atNLE10VSwQsN4Z6r0CBwqzXesHmV+BeoyAUri8EyMfi2FowXS
+                5dhd7doo2DVII0V5BAjigP89GEVAtda8b2ehodU4rNaAW+dGfzlFkyo89GTlcrHYCLpKD+V7yeeH
+                NzLjkp24Uu1Ed6G8/F8qjqGRzlbl2H2dzjpMg1KdwsHxOlmJ7GTeZC/nesXbeZ6c9OYnuxUc3fmB
+                uFft/Ff8xMd0s65SXIb/gAAAABJRU5ErkJggg=="  alt="" /></a>  ${key}
+                <div id="${key}-stats" class="stats">&nbsp;</div>
+            </div>
             <div class="grid_1" id="${key}-beat">
                 &nbsp;
                 <span style="display:none">
@@ -81,23 +98,37 @@
                 <div class="content"></div>
             </div>
             <div class="clear"></div>
-        </div> 
+        </div>
     </script>
-    
+
     <script id="vm-tmpl" type="text/x-jquery-tmpl">
-        <div class="vm" id="${key}">
-            ${so} - ${key}
-            <div class="clear"></div>
+        <div class="vm" id="${key}" >
+             <a href="#" rel="${key}" class="delete-vm">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29md
+                HdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJdSURBVDjLpZP7S1NhGMf9W7YfogSJboSEUVCY8
+                zJ31trcps6zTI9bLGJpjp1hmkGNxVz4Q6ildtXKXzJNbJRaRmrXoeWx8tJOTWptnrNryre5YCYuI
+                3rh+8vL+/m8PA/PkwIg5X+y5mJWrxfOUBXm91QZM6UluUmthntHqplxUml2lciF6wrmdHriI0Wx3
+                xw2hAediLwZRWRkCPzdDswaSvGqkGCfq8VEUsEyPF1O8Qu3O7A09RbRvjuIttsRbT6HHzebsDjcB
+                4/JgFFlNv9MnkmsEszodIIY7Oaut2OJcSF68Qx8dgv8tmqEL1gQaaARtp5A+N4NzB0lMXxon/uxb
+                I8gIYjB9HytGYuusfiPIQcN71kjgnW6VeFOkgh3XcHLvAwMSDPohOADdYQJdF1FtLMZPmslvhZJk
+                2ahkgRvq4HHUoWHRDqTEDDl2mDkfheiDgt8pw340/EocuClCuFvboQzb0cwIZgki4KhzlaE6w0In
+                ipbVzBfqoK/qRH94i0rgokSFeO11iBkp8EdV8cfJo0yD75aE2ZNRvSJ0lZKcBXLaUYmQrCzDT6tD
+                N5SyRqYlWeDLZAg0H4JQ+Jt6M3atNLE10VSwQsN4Z6r0CBwqzXesHmV+BeoyAUri8EyMfi2FowXS
+                5dhd7doo2DVII0V5BAjigP89GEVAtda8b2ehodU4rNaAW+dGfzlFkyo89GTlcrHYCLpKD+V7yeeH
+                NzLjkp24Uu1Ed6G8/F8qjqGRzlbl2H2dzjpMg1KdwsHxOlmJ7GTeZC/nesXbeZ6c9OYnuxUc3fmB
+                uFft/Ff8xMd0s65SXIb/gAAAABJRU5ErkJggg==" alt=""  /></a>
+                &nbsp; ${so} - ${key}
+            <div class="clear" >  </div>
         </div>
     </script>
 
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
     <script type="text/javascript" src="//ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
-    <link rel="stylesheet" href="//cachedcommons.org/cache/960/0.0.0/stylesheets/reset-min.css" /> 
-    <link rel="stylesheet" href="//cachedcommons.org/cache/960/0.0.0/stylesheets/text-min.css" /> 
-    <link rel="stylesheet" href="//cachedcommons.org/cache/960/0.0.0/stylesheets/960-min.css" /> 
+    <link rel="stylesheet" href="//cachedcommons.org/cache/960/0.0.0/stylesheets/reset-min.css" />
+    <link rel="stylesheet" href="//cachedcommons.org/cache/960/0.0.0/stylesheets/text-min.css" />
+    <link rel="stylesheet" href="//cachedcommons.org/cache/960/0.0.0/stylesheets/960-min.css" />
     <style type="text/css">
-        
+
         div.host {
             padding-bottom:4px;
             min-height:22px;
@@ -158,7 +189,7 @@
             border-bottom-right-radius:5px;
             -webkit-border-bottom-left-radius:5px;
             border-bottom-left-radius:5px;
-           
+
         }
 
         div.info-header {
@@ -196,22 +227,60 @@
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function(){
 
-            $('.addvm').live('click', function(){ 
+            var numvms = 0;
+            var numhosts = 0;
+            $('#logout').live('click', function(){
+                $.post('./',{
+                    action: 'logout',
+                    }, function(){
+                        location.reload();
+                    });
+                return false;
+            });
+            $('.addvm').live('click', function(){
                 $.post('./', {
                     action: 'vm',
                     host: $(this).attr('rel'),
                     so: $('#service-offerings').val()
-                    }, function(){}); 
+                    }, function(){});
                 return false;
             });
 
-            $('#addhost').click(function(){ 
-                $.post('./', {action: 'host' }, function(){}); 
+            $('.delete-host').live('click', function(){
+                var el = $(this).parent().parent();
+                $.post('./', {
+                    action: 'delete_host',
+                    host: $(this).attr('rel'),
+                    }, function(){
+                        $(el).remove();
+                });
+                numhosts--;
+                $('#hostlabel').text('Host ('+ numhosts +')');
+                return false;
+            });
+            $('.delete-vm').live('click', function(){
+                var el = $(this).parent();
+                var id = $(el).parent().parent().attr('id');
+                $.post('./', {
+                    action: 'delete_vm',
+                    host: id.substring(0,id.indexOf("-vms")),
+                    vmid: el.attr('id'),
+                    }, function(){
+                        // alert(id.substring(0,id.indexOf("-vms")));
+                        // alert(el.attr('id'));
+                        $(el).remove();
+                });
+                numvms--;
+                $('#vmlabel').text('Virtual Machines ('+ numvms +')');
                 return false;
             });
 
-            var numvms = 0;                
-            var numhosts = 0;
+            $('#addhost').click(function(){
+                $.post('./', {action: 'host' }, function(){});
+                return false;
+            });
+
+
             var actions = {
                     new_host: function(j) {
                     numhosts++;
@@ -221,9 +290,9 @@
                 hb: function(j) {
                     $('#' + j.key + '-beat>span')
                         .fadeIn('slow', function() { $(this).hide(); });
-                }, 
-                stats: function(j) {                    
-                           $('#'+ j.key+ '-stats').empty().append('usage: <b>' + j.numcpus + ' cpus</b> <br/> free mem: <b>' + 
+                },
+                stats: function(j) {
+                           $('#'+ j.key+ '-stats').empty().append('usage: <b>' + j.numcpus + ' cpus</b> <br/> free mem: <b>' +
                                    j.mem.toFixed(2) + '% </b>');
                 },
                 vm: function(j) {
@@ -232,11 +301,11 @@
                         $('#vm-tmpl').tmpl(j.vm));
                     $('#vmlabel').text('Virtual Machines ('+ numvms +')');
                 },
-                capacity: function(j) {                                                      
-                    $('#'+ j.key+ '-stats').after('<div><i>Insufficient capacity</i></div>');
+                capacity: function(j) {
+                    alert("Insufficient capacity on this host!");
                 }
-            }; 
-            
+            };
+
             if ("WebSocket" in window) {
                 var ws = new WebSocket("ws://{{path}}/actions/");
               ws.onopen = function() {};
@@ -252,5 +321,6 @@
             }
         });
     </script>
+    <center> <button id="logout">Logout</ button> </center>
 </body>
 </html>
