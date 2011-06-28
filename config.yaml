@@ -1,3 +1,7 @@
+ipaddress: 127.0.0.1
+hostname: localhost
+#hostname: trausti.hopto.org
+
 host:
     numcpus: 32
     mem: 32768

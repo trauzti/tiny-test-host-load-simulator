@@ -1,6 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -
-
+import pika
+import time
+import yaml
+import json
 import functools
 import logging
 import json
@@ -8,24 +10,18 @@ import uuid
 import yaml
 import copy
 import mq_send
-import comment
 
 from tornado.ioloop import IOLoop, PeriodicCallback
-from tornado.web import RequestHandler, Application
 from tornado.websocket import WebSocketHandler
 
 
-config = yaml.load(open('config.yaml', 'r').read())
-ioloop = IOLoop.instance()
 
+config = yaml.load(open('config.yaml', 'r').read())
 logging.basicConfig(level=logging.INFO,
 format='%(asctime)s - %(message)s',
 datefmt='%Y-%m-%d %H:%M:%S')
 
-
-LISTENERS = []
-
-
+HOSTS = {}
 
 
 class Offering(object):
@@ -47,8 +43,7 @@ offerings = [Offering(**i)
     for i in config['offerings']]
 offerings_lookup = dict([(str(i), i) for i in offerings])
 
-"""
-HOSTS = {}
+
 class Host(object):
     def __init__(self, id):
         self.id = id
@@ -127,104 +122,41 @@ def delete_vm(_key,_vm_key):
                 HOSTS[_key].mem+=o.mem
                 logging.info('deleted vm')
                 break
-"""
 
-class BaseHandler(RequestHandler):
-    def get_current_user(self):
-        return self.get_secure_cookie("user")
 
-class MainHandler(BaseHandler):
-    def get(self):
-        if not self.current_user=="godzilla":
-            self.redirect("/login")
-            return
-        self.render("index.html",
-            title="Host simulator",
-            path='localhost:8888',
-            offerings=offerings)
-    def post(self):
-        if not self.current_user=="gogo":
-            self.redirect("/login")
-            return
-        action = self.request.arguments['action'][0]
 
-        if action == 'host':
-            create_host()
-        if action == 'logout':
-            self.clear_all_cookies()
-            self.redirect("/login")
-            return
-        elif action == 'delete_host':
+
+connection = pika.BlockingConnection(pika.ConnectionParameters(
+        host=config['hostname']))
+channel = connection.channel()
+
+channel.queue_declare(queue='task_queue', durable=True)
+print 'Consumer ready for work'
+
+def callback(ch, method, properties, body):
+    try:
+        message=json.loads(body)
+        message_type=message['type']
+        logging.info("Received message of 'type' %s"  % (message_type,))
+        if message_type=='create_vm':
+            print "Trying to create VM!"
             try:
-                delete_host(self.request.arguments['host'][0])
+                create_vm(message['host'],message['offering'])
             except:
-                pass
-        elif action == 'vm':
-            host = self.request.arguments['host'][0]
-            so = self.request.arguments['so'][0]
-            create_vm(host, so)
-        elif action == 'delete_vm':
-            host = self.request.arguments['host'][0]
-            vmid = self.request.arguments['vmid'][0]
+                logging.info("Failed to create vm")
+        elif message_type=='create_host':
+            print "Trying to start host!"
             try:
-                delete_vm(host, vmid)
+                create_host()
             except:
-                pass
+                logging.info("Failed to create host")
+    except:
+        logging.info("Received message without 'type' ")
 
+    ch.basic_ack(delivery_tag = method.delivery_tag)
 
-class LoginHandler(BaseHandler):
-    def get(self):
-        self.write('<html><body><form action="/login" method="post">'
-                   'Password: <input type="text" name="name">'
-                   '<input type="submit" value="Sign in">'
-                   '</form></body></html>')
+channel.basic_qos(prefetch_count=1)
+channel.basic_consume(callback,
+                      queue='task_queue')
 
-    def post(self):
-        self.set_secure_cookie("user", self.get_argument("name"))
-        self.redirect("/")
-
-
-class RealTimeHandler(WebSocketHandler):
-    def open(self):
-        LISTENERS.append(self)
-
-        def init_stack():
-            for k, v in HOSTS.items():
-                yield {'action': 'new_host', 'key': k}
-                for vm in v:
-                    yield {'key': k, 'action': 'vm', 'vm': vm}
-
-        for data in init_stack():
-            self.write_message(unicode(json.dumps(data)))
-
-    def on_message(self, message):
-        pass
-
-    def on_close(self):
-        LISTENERS.remove(self)
-
-def start_hosts(number):
-    for i in range(number):
-        create_host()
-
-def start_vms(number):
-    for m in range(number):
-        host_number_id=copy.copy(HOSTS.keys()[number-1-m])
-        for i in range(5):
-            create_vm(host_number_id,'m1.xlarge')
-
-application = Application([
-    (r"/", MainHandler),
-    (r"/actions/", RealTimeHandler),
-    (r"/login", LoginHandler),
-], cookie_secret="61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=")
-
-run_me=True
-#run_me=False
-
-if __name__ == "__main__":
-    application.listen(8888)
-    start_hosts(8)
-    start_vms(8)
-    if run_me:
-        ioloop.start()
+channel.start_consuming()

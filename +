@@ -1,0 +1,20 @@
+import pika
+import sys
+import yaml
+
+config = yaml.load(open('config.yaml', 'r').read())
+
+connection = pika.BlockingConnection(pika.ConnectionParameters(
+        host=config['hostname']))
+channel = connection.channel()
+
+channel.queue_declare(queue='task_queue', durable=True)
+def msg_start_vm():
+    message = "Start vm"
+    channel.basic_publish(exchange='',
+                          routing_key='task_queue',
+                          body=message,
+                          properties=pika.BasicProperties(
+                             delivery_mode = 2, # make message persistent
+                          ))
+connection.close()        
